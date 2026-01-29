@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Favicon Generator</title>
+</head>
+
+<body>
+    <h1>Favicon Generator</h1>
+    <p>This tool will convert the SVG favicon to PNG formats.</p>
+    <button onclick="generateFavicons()">Generate Favicons</button>
+    <div id="output"></div>
+
+    <script>
+        async function generateFavicons() {
+            const svgUrl = '/favicon.svg';
+            const sizes = [
+                { size: 16, name: 'favicon-16x16.png' },
+                { size: 32, name: 'favicon-32x32.png' },
+                { size: 180, name: 'apple-touch-icon.png' }
+            ];
+
+            const output = document.getElementById('output');
+            output.innerHTML = '<h2>Generated Files:</h2>';
+
+            for (const { size, name } of sizes) {
+                try {
+                    const canvas = document.createElement('canvas');
+                    canvas.width = size;
+                    canvas.height = size;
+                    const ctx = canvas.getContext('2d');
+
+                    const img = new Image();
+                    await new Promise((resolve, reject) => {
+                        img.onload = resolve;
+                        img.onerror = reject;
+                        img.src = svgUrl;
+                    });
+
+                    ctx.drawImage(img, 0, 0, size, size);
+
+                    const link = document.createElement('a');
+                    link.download = name;
+                    link.href = canvas.toDataURL('image/png');
+                    link.textContent = `Download ${name}`;
+                    link.style.display = 'block';
+                    link.style.margin = '10px 0';
+                    output.appendChild(link);
+
+                    // Auto-click to download
+                    link.click();
+                } catch (error) {
+                    output.innerHTML += `<p style="color: red;">Error generating ${name}: ${error.message}</p>`;
+                }
+            }
+        }
+    </script>
+</body>
+
+</html>
