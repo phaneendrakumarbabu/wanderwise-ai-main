@@ -1,0 +1,10 @@
+{
+  "version": 2,
+  "framework": "vite",
+  "installCommand": "npm --prefix wanderwise-ai-main install",
+  "buildCommand": "npm --prefix wanderwise-ai-main run build",
+  "outputDirectory": "wanderwise-ai-main/dist",
+  "rewrites": [
+    { "source": "/(.*)", "destination": "/index.html" }
+  ]
+}
